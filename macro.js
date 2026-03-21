@@ -353,7 +353,8 @@
             if (p.injection_position === 1) {
                 const d = p.injection_depth ?? '?';
                 const o = p.injection_order ?? '?';
-                html += `<span class="sim-prompt-depth">Depth ${d} · Order ${o}</span>`;
+                const depthHint = d === 0 ? '마지막 메시지 뒤' : d === 1 ? '마지막 메시지 앞' : `마지막에서 ${d}칸 위`;
+                html += `<span class="sim-prompt-depth" title="${depthHint}">Depth ${d} · Order ${o}</span>`;
             }
             html += `<span class="sim-prompt-role">${escapeHtml(role)}</span>`;
             html += `</div>`;
@@ -376,7 +377,7 @@
 
         // ─── 뷰 2: 최종 결과 ───
         html += `<div class="sim-view${activeViewTab === 'final' ? ' active' : ''}" id="sim-view-final">`;
-        html += '<div class="sim-guide">실제 API 전송 구조를 보여줍니다. Depth 프롬프트는 마지막 메시지 기준으로 삽입되는 위치에 표시됩니다.</div>';
+        html += '<div class="sim-guide">실제 API에 전송되는 순서입니다. Depth는 마지막 메시지 기준 위치를 뜻합니다. (0 = 마지막 메시지 바로 뒤, 1 = 바로 앞, 숫자가 클수록 대화 위쪽)</div>';
 
         // 일반 프롬프트와 depth 프롬프트 분리
         let normalParts = [];
@@ -429,14 +430,20 @@
 
                 depthKeys.forEach(depth => {
                     if (depth === 0) {
-                        html += '<div class="sim-chat-placeholder">💬 마지막 메시지</div>';
+                        html += '<div class="sim-chat-placeholder last">💬 마지막 메시지</div>';
                     }
-                    html += `<div class="sim-depth-marker">Depth ${depth} — 끝에서 ${depth}번째 메시지 뒤에 삽입</div>`;
+                    const depthDesc = depth === 0
+                        ? '마지막 메시지 바로 뒤'
+                        : depth === 1
+                            ? '마지막 메시지 바로 앞'
+                            : `마지막 메시지에서 ${depth}칸 위`;
+                    html += `<div class="sim-depth-marker">↕ Depth ${depth} — ${depthDesc}</div>`;
                     depthGroups.get(depth).forEach(part => {
                         html += `<div class="sim-final-block depth">`;
                         html += `<div class="sim-final-header">`;
                         html += `<span class="sim-prompt-name">${escapeHtml(part.name)}</span>`;
-                        html += `<span class="sim-final-depth">Depth ${part.depth} · Order ${part.order}</span>`;
+                        const dHint = part.depth === 0 ? '마지막 메시지 뒤' : part.depth === 1 ? '마지막 메시지 앞' : `마지막에서 ${part.depth}칸 위`;
+                        html += `<span class="sim-final-depth" title="${dHint}">Depth ${part.depth} · Order ${part.order}</span>`;
                         html += `<span class="sim-prompt-role">${escapeHtml(part.role)}</span>`;
                         html += `</div>`;
                         html += `<pre class="sim-final-content">${escapeHtml(part.content)}</pre>`;
@@ -445,7 +452,7 @@
                 });
 
                 if (!depthGroups.has(0)) {
-                    html += '<div class="sim-chat-placeholder">💬 마지막 메시지</div>';
+                    html += '<div class="sim-chat-placeholder last">💬 마지막 메시지</div>';
                 }
             }
         } else {
