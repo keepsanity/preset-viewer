@@ -1,0 +1,463 @@
+/* 변수 연결도 */
+
+.dep-upload-section {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.dep-upload-area {
+    border: 3px dashed #ffb3d9;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff5fa;
+}
+
+.dep-upload-area:hover {
+    background: #ffe5f7;
+    border-color: #d63384;
+}
+
+#depResults {
+    padding: 20px;
+}
+
+/* 요약 */
+.dep-summary {
+    background: #fff5fa;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.dep-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(214, 51, 132, 0.08);
+}
+
+.dep-summary-row:last-child {
+    border-bottom: none;
+}
+
+.dep-summary-label {
+    font-size: 0.88em;
+    color: #8a5070;
+    font-weight: 500;
+}
+
+.dep-summary-value {
+    font-size: 1em;
+    font-weight: 700;
+    color: #d63384;
+}
+
+.dep-summary-value.dep-connected {
+    color: #00897b;
+}
+
+.dep-summary-value.dep-orphan {
+    color: #bbb;
+}
+
+.dep-summary-value.dep-warning {
+    color: #ef6c00;
+}
+
+/* 탭 */
+.dep-view-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #ffe5f7;
+}
+
+.dep-view-tab {
+    flex: 1;
+    padding: 12px 8px;
+    background: white;
+    border: none;
+    color: #b05080;
+    font-size: 0.88em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.dep-view-tab:not(:last-child) {
+    border-right: 1px solid #ffe5f7;
+}
+
+.dep-view-tab:hover {
+    background: #fff5fa;
+}
+
+.dep-view-tab.active {
+    background: #d63384;
+    color: white;
+}
+
+.dep-view {
+    display: none;
+}
+
+.dep-view.active {
+    display: block;
+}
+
+.dep-guide {
+    background: #f8f4ff;
+    border: 1px solid rgba(140, 120, 180, 0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.82em;
+    color: #6858a0;
+    line-height: 1.5;
+}
+
+.dep-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #b0b0b0;
+    font-size: 1em;
+}
+
+/* ─── 변수별 보기 ─── */
+
+.dep-var-card {
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.dep-var-card:hover {
+    border-color: rgba(214, 51, 132, 0.25);
+    box-shadow: 0 2px 8px rgba(214, 51, 132, 0.08);
+}
+
+.dep-var-card.dep-hl {
+    border-color: rgba(214, 51, 132, 0.5);
+    box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.12);
+}
+
+.dep-var-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(214, 51, 132, 0.03);
+    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.dep-var-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dep-var-name-label {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: #333;
+}
+
+.dep-var-badge {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.dep-var-badge.connected {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.dep-var-badge.orphan-set {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.dep-var-badge.orphan-get {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+/* 흐름도 */
+.dep-var-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px;
+    overflow-x: auto;
+}
+
+.dep-flow-col {
+    flex: 1;
+    min-width: 80px;
+}
+
+.dep-flow-label {
+    font-size: 0.72em;
+    color: #999;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.dep-flow-tag {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.82em;
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dep-flow-tag.setter {
+    background: #fce4ec;
+    color: #c62828;
+}
+
+.dep-flow-tag.getter {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.dep-flow-empty {
+    font-size: 0.8em;
+    color: #ccc;
+    font-style: italic;
+}
+
+.dep-flow-arrow {
+    font-size: 1.2em;
+    color: #ccc;
+    flex-shrink: 0;
+    font-weight: 700;
+}
+
+.dep-flow-bubble {
+    padding: 6px 14px;
+    border: 2px solid;
+    border-radius: 20px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85em;
+    font-weight: 700;
+    flex-shrink: 0;
+    white-space: nowrap;
+    background: white;
+}
+
+/* 영향도 */
+.dep-var-impact {
+    padding: 8px 14px;
+    background: #fffde7;
+    border-top: 1px solid rgba(255, 235, 59, 0.3);
+    font-size: 0.8em;
+    color: #6d5e00;
+    line-height: 1.5;
+}
+
+/* ─── 프롬프트별 보기 ─── */
+
+.dep-prompt-card {
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.dep-prompt-card.disabled {
+    opacity: 0.55;
+}
+
+.dep-prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(214, 51, 132, 0.03);
+    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.dep-prompt-num {
+    background: #d63384;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7em;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.dep-prompt-card.disabled .dep-prompt-num {
+    background: #ccc;
+}
+
+.dep-prompt-name {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #333;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dep-prompt-role {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: rgba(214, 51, 132, 0.08);
+    color: #b05080;
+    font-weight: 600;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.dep-prompt-status {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.dep-prompt-status.on {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.dep-prompt-status.off {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.dep-prompt-body {
+    padding: 12px 14px;
+}
+
+.dep-prompt-section {
+    margin-bottom: 10px;
+}
+
+.dep-prompt-section:last-child {
+    margin-bottom: 0;
+}
+
+.dep-section-label {
+    display: block;
+    font-size: 0.75em;
+    color: #999;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dep-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.dep-tag {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: color-mix(in srgb, var(--tc) 12%, white);
+    color: var(--tc);
+    border: 1px solid color-mix(in srgb, var(--tc) 25%, transparent);
+}
+
+.dep-tag:hover {
+    background: color-mix(in srgb, var(--tc) 20%, white);
+    transform: translateY(-1px);
+}
+
+.dep-tag.dep-hl {
+    background: color-mix(in srgb, var(--tc) 25%, white);
+    border-color: var(--tc);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--tc) 15%, transparent);
+}
+
+.dep-prompt-impact {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #fffde7;
+    border-radius: 6px;
+    font-size: 0.8em;
+    color: #6d5e00;
+    line-height: 1.5;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    #depResults {
+        padding: 12px;
+    }
+
+    .dep-var-flow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .dep-flow-arrow {
+        text-align: center;
+        transform: rotate(90deg);
+        font-size: 1em;
+    }
+
+    .dep-flow-bubble {
+        align-self: center;
+    }
+
+    .dep-flow-col {
+        text-align: center;
+    }
+
+    .dep-prompt-header {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .dep-view-tab {
+        padding: 10px 4px;
+        font-size: 0.8em;
+    }
+
+    .dep-upload-section {
+        padding: 15px;
+    }
+}

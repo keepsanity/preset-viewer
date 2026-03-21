@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="compare.css">
+    <link rel="stylesheet" href="macro.css">
+    <link rel="stylesheet" href="dependency.css">
+    <link rel="stylesheet" href="timeline.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Preset Viewer</h1>
+            <p>프리셋을 좀 더 편하게 보기 위한 도구입니당</p>
+        </div>
+
+        <!-- Menu Page -->
+        <div class="page active" id="page-menu">
+            <div class="menu-grid">
+                <button class="menu-card" data-page="viewer">
+                    <div class="menu-card-icon">📄</div>
+                    <div class="menu-card-title">프리셋 보기</div>
+                    <div class="menu-card-desc">프리셋의 프롬프트 목록과 내용 확인</div>
+                </button>
+                <button class="menu-card" data-page="transfer">
+                    <div class="menu-card-icon">🔀</div>
+                    <div class="menu-card-title">프롬프트 옮기기</div>
+                    <div class="menu-card-desc">프리셋 간 프롬프트 이동</div>
+                </button>
+                <button class="menu-card" data-page="compare">
+                    <div class="menu-card-icon">⚖️</div>
+                    <div class="menu-card-title">프리셋 비교</div>
+                    <div class="menu-card-desc">두 프리셋의 차이점 비교</div>
+                </button>
+                <button class="menu-card" data-page="macro">
+                    <div class="menu-card-icon">🧪</div>
+                    <div class="menu-card-title">프리셋 시뮬레이터</div>
+                    <div class="menu-card-desc">프롬프트 순서와 최종 전송 내용 확인</div>
+                </button>
+                <button class="menu-card" data-page="dependency">
+                    <div class="menu-card-icon">🔗</div>
+                    <div class="menu-card-title">매크로 확인하기</div>
+                    <div class="menu-card-desc">매크로가 어디서 설정되고 쓰이는지 확인</div>
+                </button>
+                <button class="menu-card" data-page="timeline">
+                    <div class="menu-card-icon">📊</div>
+                    <div class="menu-card-title">프리셋 변경 비교</div>
+                    <div class="menu-card-desc">여러 버전의 프리셋을 올려서 변경점 추적</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page: Preset Viewer (Original) -->
+        <div class="page" id="page-viewer">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">프리셋 보기</span>
+        </div>
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">프리셋 파일을 클릭하여 업로드</div>
+                <div class="upload-subtext">JSON 파일</div>
+            </div>
+            <input type="file" id="fileInput" accept=".json,application/json">
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="search-section" id="searchSection">
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 프롬프트 검색...">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="content-section" id="contentSection">
+            <div class="preset-name" id="presetName"></div>
+            <div class="stats" id="stats"></div>
+            <div class="button-container">
+                <button class="copy-button" id="copyButton">📋 전체 텍스트 복사하기</button>
+            </div>
+            <div id="promptList"></div>
+        </div>
+        </div>
+        <!-- End Page: Preset Viewer -->
+
+        <!-- Page: Prompt Transfer -->
+        <div class="page" id="page-transfer">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">프롬프트 옮기기</span>
+        </div>
+            <div class="transfer-container">
+                <!-- Left Column -->
+                <div class="transfer-column">
+                    <div class="column-header">
+                        <div class="column-upload-area" data-column="left">
+                            <div class="upload-icon-small">📁</div>
+                            <div class="upload-text-small">프리셋 업로드</div>
+                        </div>
+                        <input type="file" class="column-file-input" id="leftFileInput" accept=".json,application/json">
+                        <div class="column-filename" id="leftFilename"></div>
+                    </div>
+                    <div class="prompt-list-transfer" id="leftPromptList" data-column="left">
+                        <div class="empty-state">업로드해주세용</div>
+                    </div>
+                    <button class="export-button" id="leftExportBtn" style="display: none;">내보내기</button>
+                </div>
+
+                <!-- Right Column -->
+                <div class="transfer-column">
+                    <div class="column-header">
+                        <div class="column-upload-area" data-column="right">
+                            <div class="upload-icon-small">📁</div>
+                            <div class="upload-text-small">프리셋 업로드</div>
+                        </div>
+                        <input type="file" class="column-file-input" id="rightFileInput" accept=".json,application/json">
+                        <div class="column-filename" id="rightFilename"></div>
+                    </div>
+                    <div class="prompt-list-transfer" id="rightPromptList" data-column="right">
+                        <div class="empty-state">업로드해주세용</div>
+                    </div>
+                    <button class="export-button" id="rightExportBtn" style="display: none;">내보내기</button>
+                </div>
+            </div>
+        </div>
+        <!-- End Page: Prompt Transfer -->
+
+        <!-- Page: Preset Compare -->
+        <div class="page" id="page-compare">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">프리셋 비교</span>
+        </div>
+            <div class="compare-upload-section">
+                <div class="compare-upload-col">
+                    <div class="compare-upload-area" data-compare="a">
+                        <div class="upload-icon-small">📁</div>
+                        <div class="upload-text-small">파일 업로드</div>
+                    </div>
+                    <input type="file" class="column-file-input" id="compareFileA" accept=".json,application/json">
+                    <div class="column-filename" id="compareFilenameA"></div>
+                </div>
+                <div class="compare-vs">VS</div>
+                <div class="compare-upload-col">
+                    <div class="compare-upload-area" data-compare="b">
+                        <div class="upload-icon-small">📁</div>
+                        <div class="upload-text-small">파일 업로드</div>
+                    </div>
+                    <input type="file" class="column-file-input" id="compareFileB" accept=".json,application/json">
+                    <div class="column-filename" id="compareFilenameB"></div>
+                </div>
+            </div>
+            <div class="compare-actions">
+                <button class="compare-button" id="compareBtn" disabled>비교하기</button>
+            </div>
+            <div id="compareResults"></div>
+        </div>
+        <!-- End Page: Preset Compare -->
+
+        <!-- Page: Macro Variables -->
+        <div class="page" id="page-macro">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">프리셋 시뮬레이터</span>
+        </div>
+            <div class="macro-upload-section">
+                <div class="macro-upload-area" id="macroUploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">프리셋 파일을 클릭하여 업로드</div>
+                    <div class="upload-subtext">JSON 파일</div>
+                </div>
+                <input type="file" id="macroFileInput" accept=".json,application/json">
+                <div class="column-filename" id="macroFilename"></div>
+            </div>
+            <div id="macroResults"></div>
+        </div>
+        <!-- End Page: Macro Variables -->
+
+        <!-- Page: Variable Dependency -->
+        <div class="page" id="page-dependency">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">매크로 확인하기</span>
+        </div>
+            <div class="dep-upload-section">
+                <div class="dep-upload-area" id="depUploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">프리셋 파일을 클릭하여 업로드</div>
+                    <div class="upload-subtext">JSON 파일</div>
+                </div>
+                <input type="file" id="depFileInput" accept=".json,application/json">
+                <div class="column-filename" id="depFilename"></div>
+            </div>
+            <div id="depResults"></div>
+        </div>
+        <!-- End Page: Variable Dependency -->
+
+        <!-- Page: Preset Timeline Diff -->
+        <div class="page" id="page-timeline">
+        <div class="page-header">
+            <button class="back-button" data-back>← 메뉴</button>
+            <span class="page-title">프리셋 변경 비교</span>
+        </div>
+            <div class="tl-upload-section">
+                <div class="tl-guide-top">프리셋 파일을 2개 이상 올려주세요. 이전 → 최신 순서로 올리면 변경점을 보여줍니다.</div>
+                <div class="tl-upload-area" id="tlUploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">프리셋 파일들을 클릭하여 업로드</div>
+                    <div class="upload-subtext">여러 JSON 파일 선택 가능</div>
+                </div>
+                <input type="file" id="tlFileInput" accept=".json,application/json" multiple>
+                <div class="tl-file-list" id="tlFileList"></div>
+            </div>
+            <div id="tlResults"></div>
+        </div>
+        <!-- End Page: Preset Timeline Diff -->
+
+        <!-- Modal for Prompt Content -->
+        <div class="modal" id="promptModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalPromptName"></h3>
+                    <button class="modal-close" id="modalClose">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-meta" id="modalMeta"></div>
+                    <div class="modal-prompt-content" id="modalPromptContent"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script src="compare.js"></script>
+    <script src="macro.js"></script>
+    <script src="dependency.js"></script>
+    <script src="timeline.js"></script>
+</body>
+</html>

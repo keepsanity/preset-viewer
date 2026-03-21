@@ -1,0 +1,444 @@
+/* ============================================
+   Compare Tab - Pink Theme
+   ============================================ */
+
+/* Upload section */
+.compare-upload-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 25px 20px;
+}
+
+.compare-upload-col {
+    flex: 1;
+    text-align: center;
+}
+
+.compare-upload-area {
+    border: 2px dashed #ffb3d9;
+    border-radius: 8px;
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.compare-upload-area:hover {
+    border-color: #ffc9e5;
+    background: #fffafd;
+}
+
+.compare-vs {
+    display: flex;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #d63384;
+    padding-top: 10px;
+}
+
+.compare-actions {
+    text-align: center;
+    padding: 5px 20px 25px;
+}
+
+.compare-button {
+    background: linear-gradient(135deg, #ffb3d9 0%, #ffc9e5 50%, #ffd9f2 100%);
+    color: #d63384;
+    border: none;
+    padding: 12px 40px;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 179, 217, 0.4);
+}
+
+.compare-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.compare-button:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 179, 217, 0.6);
+}
+
+/* Results container */
+#compareResults {
+    padding: 0 20px 20px;
+    box-sizing: border-box;
+}
+
+/* ============================================
+   Summary - vertical list
+   ============================================ */
+.compare-summary {
+    background: #fff5fa;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 24px;
+}
+
+.compare-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(214, 51, 132, 0.08);
+}
+
+.compare-summary-row:last-child {
+    border-bottom: none;
+}
+
+.compare-summary-label {
+    font-size: 0.88em;
+    color: #8a5070;
+    font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    margin-right: 12px;
+}
+
+.compare-summary-value {
+    font-size: 1em;
+    font-weight: 700;
+    color: #d63384;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   Section toggle (collapsible sections)
+   ============================================ */
+.compare-section {
+    margin-bottom: 24px;
+}
+
+.compare-section-header {
+    font-size: 1em;
+    font-weight: 700;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.compare-section-header > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.compare-section-header:hover {
+    opacity: 0.85;
+}
+
+.compare-section-toggle {
+    font-size: 0.85em;
+    transition: transform 0.3s;
+    margin-left: 8px;
+}
+
+.compare-section-toggle.active {
+    transform: rotate(180deg);
+}
+
+.compare-section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.compare-section-body.active {
+    max-height: 50000px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 14px;
+}
+
+/* Section header color variants */
+.compare-section-header.only-a {
+    background: rgba(235, 87, 87, 0.08);
+    border-left: 4px solid #e07070;
+    color: #c04040;
+}
+
+.compare-section-header.only-b {
+    background: rgba(72, 166, 167, 0.08);
+    border-left: 4px solid #5ab8b8;
+    color: #3a9090;
+}
+
+.compare-section-header.changed {
+    background: rgba(230, 160, 60, 0.08);
+    border-left: 4px solid #e0a050;
+    color: #b07828;
+}
+
+
+/* ============================================
+   Compare items (individual prompt cards)
+   ============================================ */
+.compare-item {
+    border: 1px solid #f0d6e6;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background: white;
+}
+
+.compare-item-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.compare-item-header:hover {
+    opacity: 0.85;
+}
+
+.compare-item-header.only-a {
+    background: rgba(235, 87, 87, 0.05);
+}
+
+.compare-item-header.only-b {
+    background: rgba(72, 166, 167, 0.05);
+}
+
+.compare-item-header.changed {
+    background: rgba(230, 160, 60, 0.05);
+}
+
+.compare-item-name {
+    font-weight: 600;
+    font-size: 0.9em;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+    color: #4a3040;
+}
+
+.compare-item-badges {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+/* Badges - all pink palette */
+.compare-badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7em;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.compare-badge.role      { background: rgba(214, 51, 132, 0.12); color: #d63384; }
+.compare-badge.content   { background: rgba(230, 160, 60, 0.15); color: #b07828; }
+.compare-badge.depth     { background: rgba(214, 51, 132, 0.1); color: #b05a8a; }
+.compare-badge.order-badge { background: rgba(214, 51, 132, 0.1); color: #c77da0; }
+.compare-badge.enabled   { background: rgba(72, 166, 167, 0.15); color: #3a9090; }
+.compare-badge.name-diff { background: rgba(230, 160, 60, 0.15); color: #b07828; }
+.compare-badge.position  { background: rgba(214, 51, 132, 0.1); color: #b05a8a; }
+
+.compare-item-toggle {
+    font-size: 1.2em;
+    transition: transform 0.3s;
+    color: #d63384;
+}
+
+.compare-item-toggle.active {
+    transform: rotate(180deg);
+}
+
+.compare-item-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.compare-item-detail.active {
+    max-height: 5000px;
+    overflow-y: auto;
+}
+
+.compare-detail-inner {
+    padding: 16px;
+    border-top: 1px solid #f0d6e6;
+}
+
+/* ============================================
+   Diff field display
+   ============================================ */
+.diff-field {
+    margin-bottom: 16px;
+}
+
+.diff-field:last-child {
+    margin-bottom: 0;
+}
+
+.diff-field-label {
+    font-weight: 600;
+    font-size: 0.85em;
+    color: #b05a8a;
+    margin-bottom: 6px;
+}
+
+.diff-field-values {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.diff-value {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+}
+
+.diff-value.a {
+    background: rgba(235, 87, 87, 0.08);
+    border: 1px solid rgba(235, 87, 87, 0.25);
+    color: #c04040;
+}
+
+.diff-value.b {
+    background: rgba(72, 166, 167, 0.08);
+    border: 1px solid rgba(72, 166, 167, 0.25);
+    color: #3a9090;
+}
+
+.diff-arrow {
+    color: #d6a0c0;
+    font-weight: 700;
+}
+
+/* Content diff box */
+.diff-content-box {
+    background: #fefafc;
+    border: 1px solid #f0d6e6;
+    border-radius: 6px;
+    padding: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 0.82em;
+    line-height: 1.5;
+    word-break: break-word;
+    box-sizing: border-box;
+}
+
+.diff-content-box::-webkit-scrollbar { width: 6px; }
+.diff-content-box::-webkit-scrollbar-track { background: #fff5fa; border-radius: 3px; }
+.diff-content-box::-webkit-scrollbar-thumb { background: #ffb3d9; border-radius: 3px; }
+
+.diff-line {
+    display: block;
+    padding: 1px 4px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.diff-line.removed {
+    background: rgba(235, 87, 87, 0.12);
+    color: #a03030;
+}
+
+.diff-line.added {
+    background: rgba(72, 166, 167, 0.12);
+    color: #2a7878;
+}
+
+/* Long content fallback labels */
+.diff-label-a {
+    margin-bottom: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #c04040;
+}
+
+.diff-label-b {
+    margin-bottom: 4px;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #3a9090;
+}
+
+.diff-content-box.side-a {
+    margin-bottom: 10px;
+    border-left: 3px solid #e07070;
+}
+
+.diff-content-box.side-b {
+    border-left: 3px solid #5ab8b8;
+}
+
+/* Identical message */
+.compare-identical {
+    text-align: center;
+    padding: 40px;
+    color: #d63384;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+/* ============================================
+   Mobile responsive
+   ============================================ */
+@media (max-width: 480px) {
+    .tab-button {
+        font-size: 0.8em !important;
+        padding: 10px 5px !important;
+    }
+
+    .compare-summary {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 15px 12px;
+    }
+
+    .compare-summary .stat-number {
+        font-size: 1.1em;
+    }
+
+    .compare-summary .stat-label {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 768px) {
+    .compare-upload-section { padding: 15px 10px; gap: 5px; }
+    .compare-upload-area { padding: 10px 5px; }
+    .compare-vs { font-size: 1.1em; }
+    #compareResults { padding: 0 10px 15px; }
+    .compare-section-header { font-size: 0.9em; padding: 10px 12px; }
+    .compare-item-header { padding: 8px 10px; }
+    .compare-item-name { font-size: 0.8em; }
+    .compare-badge { font-size: 0.65em; }
+    .compare-detail-inner { padding: 10px; }
+    .compare-order-container { flex-direction: column; }
+    .diff-content-box { font-size: 0.78em; max-height: 200px; }
+}

@@ -1,0 +1,387 @@
+/* 프리셋 변경 비교 */
+
+.tl-upload-section {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.tl-guide-top {
+    font-size: 0.88em;
+    color: #8a5070;
+    margin-bottom: 14px;
+    font-weight: 500;
+}
+
+.tl-upload-area {
+    border: 3px dashed #ffb3d9;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff5fa;
+}
+
+.tl-upload-area:hover {
+    background: #ffe5f7;
+    border-color: #d63384;
+}
+
+/* 파일 목록 */
+.tl-file-list {
+    margin-top: 14px;
+    text-align: left;
+}
+
+.tl-file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 8px;
+    margin-bottom: 6px;
+}
+
+.tl-file-num {
+    background: #d63384;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72em;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.tl-file-name {
+    font-weight: 600;
+    font-size: 0.88em;
+    color: #333;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tl-file-info {
+    font-size: 0.78em;
+    color: #999;
+    flex-shrink: 0;
+}
+
+.tl-file-remove {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.tl-file-remove:hover {
+    background: #fee;
+    color: #d32f2f;
+}
+
+.tl-file-hint {
+    text-align: center;
+    padding: 10px;
+    color: #bbb;
+    font-size: 0.85em;
+}
+
+/* 타임라인 */
+#tlResults {
+    padding: 20px;
+}
+
+.tl-timeline {
+    position: relative;
+}
+
+/* 각 비교 구간 */
+.tl-step {
+    margin-bottom: 24px;
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+}
+
+.tl-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(214, 51, 132, 0.04);
+    border-bottom: 1px solid rgba(214, 51, 132, 0.08);
+    flex-wrap: wrap;
+}
+
+.tl-step-files {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tl-step-from,
+.tl-step-to {
+    font-weight: 600;
+    font-size: 0.88em;
+    color: #333;
+    padding: 3px 10px;
+    background: #fff5fa;
+    border-radius: 6px;
+    border: 1px solid rgba(214, 51, 132, 0.12);
+}
+
+.tl-step-arrow {
+    color: #d63384;
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.tl-step-stats {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tl-stat {
+    font-size: 0.78em;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.tl-stat.added {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tl-stat.removed {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.tl-stat.modified {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.tl-stat.none {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.tl-no-changes {
+    text-align: center;
+    padding: 20px;
+    color: #bbb;
+    font-size: 0.9em;
+}
+
+/* 변경 사항 카드 */
+.tl-change {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.tl-change:last-child {
+    border-bottom: none;
+}
+
+.tl-change-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+}
+
+.tl-change-badge {
+    font-size: 0.72em;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.tl-change-badge.added {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.tl-change-badge.removed {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.tl-change-badge.modified {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.tl-change-name {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #333;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tl-change-role {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: rgba(214, 51, 132, 0.08);
+    color: #b05080;
+    font-weight: 600;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+/* 변경 상세 */
+.tl-change-body {
+    padding: 0 18px 12px;
+}
+
+.tl-content-preview {
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8em;
+    color: #444;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tl-content-preview.add-bg {
+    background: #f1f8e9;
+    border: 1px solid rgba(46, 125, 50, 0.15);
+}
+
+.tl-content-preview.del-bg {
+    background: #fce4ec;
+    border: 1px solid rgba(198, 40, 40, 0.15);
+}
+
+/* Diff 블록 */
+.tl-diff-label {
+    font-size: 0.82em;
+    color: #888;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.tl-diff-block {
+    margin: 0;
+    padding: 10px 14px;
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8em;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.tl-diff-del {
+    background: #fce4ec;
+    color: #c62828;
+    display: inline-block;
+    width: 100%;
+    margin: 0 -14px;
+    padding: 0 14px;
+}
+
+.tl-diff-add {
+    background: #e8f5e9;
+    color: #2e7d32;
+    display: inline-block;
+    width: 100%;
+    margin: 0 -14px;
+    padding: 0 14px;
+}
+
+/* 필드 변경 */
+.tl-diff-field {
+    font-size: 0.85em;
+    padding: 4px 0;
+    color: #555;
+}
+
+.tl-diff-field-name {
+    font-weight: 600;
+    color: #888;
+}
+
+.tl-diff-old {
+    background: #fce4ec;
+    color: #c62828;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.92em;
+}
+
+.tl-diff-new {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.92em;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    #tlResults {
+        padding: 12px;
+    }
+
+    .tl-step-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 12px 14px;
+    }
+
+    .tl-step-files {
+        justify-content: center;
+    }
+
+    .tl-step-stats {
+        justify-content: center;
+    }
+
+    .tl-change-header {
+        padding: 8px 14px;
+        gap: 6px;
+    }
+
+    .tl-change-body {
+        padding: 0 14px 10px;
+    }
+
+    .tl-upload-section {
+        padding: 15px;
+    }
+}

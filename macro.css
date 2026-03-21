@@ -1,0 +1,467 @@
+/* Preset Simulator */
+.macro-upload-section {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.macro-upload-area {
+    border: 3px dashed #ffb3d9;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff5fa;
+}
+
+.macro-upload-area:hover {
+    background: #ffe5f7;
+    border-color: #d63384;
+}
+
+#macroResults {
+    padding: 20px;
+}
+
+/* Summary */
+.sim-summary {
+    background: #fff5fa;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.sim-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(214, 51, 132, 0.08);
+}
+
+.sim-summary-row:last-child {
+    border-bottom: none;
+}
+
+.sim-summary-label {
+    font-size: 0.88em;
+    color: #8a5070;
+    font-weight: 500;
+}
+
+.sim-summary-value {
+    font-size: 1em;
+    font-weight: 700;
+    color: #d63384;
+}
+
+.sim-summary-value.sim-active {
+    color: #3a9090;
+}
+
+.sim-summary-value.sim-inactive {
+    color: #bbb;
+}
+
+/* View Tabs */
+.sim-view-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #ffe5f7;
+}
+
+.sim-view-tab {
+    flex: 1;
+    padding: 12px 8px;
+    background: white;
+    border: none;
+    color: #b05080;
+    font-size: 0.88em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sim-view-tab:not(:last-child) {
+    border-right: 1px solid #ffe5f7;
+}
+
+.sim-view-tab:hover {
+    background: #fff5fa;
+}
+
+.sim-view-tab.active {
+    background: #d63384;
+    color: white;
+}
+
+/* Views */
+.sim-view {
+    display: none;
+}
+
+.sim-view.active {
+    display: block;
+}
+
+/* Guide text */
+.sim-guide {
+    background: #f8f4ff;
+    border: 1px solid rgba(140, 120, 180, 0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 0.82em;
+    color: #6858a0;
+    line-height: 1.5;
+}
+
+/* Prompt cards (flow view) */
+.sim-prompt {
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: all 0.15s ease;
+}
+
+.sim-prompt.enabled {
+    background: white;
+}
+
+.sim-prompt.disabled {
+    background: #fafafa;
+    opacity: 0.5;
+}
+
+.sim-prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: rgba(214, 51, 132, 0.03);
+    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.sim-prompt.disabled .sim-prompt-header {
+    background: #f5f5f5;
+}
+
+.sim-prompt-num {
+    background: #d63384;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72em;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.sim-prompt.disabled .sim-prompt-num {
+    background: #ccc;
+}
+
+.sim-prompt-name {
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #333;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.sim-prompt-role {
+    font-size: 0.75em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: rgba(214, 51, 132, 0.08);
+    color: #b05080;
+    font-weight: 600;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+/* Toggle switch */
+.sim-toggle {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.sim-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.sim-toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ccc;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+}
+
+.sim-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    bottom: 2px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.sim-toggle input:checked + .sim-toggle-slider {
+    background: #d63384;
+}
+
+.sim-toggle input:checked + .sim-toggle-slider::before {
+    transform: translateX(16px);
+}
+
+.sim-prompt-badge.off {
+    font-size: 0.75em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #eee;
+    color: #999;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.sim-prompt-preview {
+    padding: 10px 14px;
+}
+
+.sim-prompt-preview code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.82em;
+    color: #666;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.sim-no-content {
+    font-size: 0.82em;
+    color: #bbb;
+    font-style: italic;
+}
+
+/* Expand button */
+.sim-expand-btn {
+    background: none;
+    border: none;
+    color: #d63384;
+    font-size: 0.8em;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 14px 8px;
+}
+
+.sim-expand-btn:hover {
+    text-decoration: underline;
+}
+
+.sim-prompt-full,
+.sim-var-full {
+    display: none;
+    background: #f8f8f8;
+    padding: 12px 14px;
+    margin: 0 14px 14px;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8em;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.sim-prompt-full.open,
+.sim-var-full.open {
+    display: block;
+}
+
+/* Depth/Order badge */
+.sim-prompt-depth {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.sim-final-depth {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+/* Chat placeholder (대화 내용 / 마지막 메시지 마커) */
+.sim-chat-placeholder {
+    padding: 10px 16px;
+    margin: 10px 0;
+    color: #999;
+    font-size: 0.85em;
+    font-weight: 600;
+    background: #f8f8f8;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+    text-align: center;
+}
+
+.sim-depth-marker {
+    padding: 6px 10px;
+    margin: 8px 0;
+    font-size: 0.78em;
+    font-weight: 600;
+    color: #1565c0;
+    background: #e3f2fd;
+    border-radius: 6px;
+    border-left: 3px solid #1565c0;
+}
+
+/* Final view */
+.sim-final-block {
+    margin-bottom: 12px;
+    border: 1px solid rgba(214, 51, 132, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sim-final-block.depth {
+    border-color: rgba(21, 101, 192, 0.2);
+}
+
+.sim-final-block.depth .sim-final-header {
+    background: rgba(21, 101, 192, 0.04);
+    border-bottom-color: rgba(21, 101, 192, 0.08);
+}
+
+.sim-final-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: rgba(214, 51, 132, 0.04);
+    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+}
+
+.sim-final-content {
+    padding: 12px 14px;
+    margin: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.82em;
+    color: #444;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+}
+
+/* Variables view */
+.sim-var-row {
+    background: white;
+    border: 1px solid rgba(214, 51, 132, 0.08);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+}
+
+.sim-var-name {
+    margin-bottom: 4px;
+}
+
+.sim-var-name code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #d63384;
+    background: #fff0f7;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.sim-var-value code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.82em;
+    color: #555;
+    word-break: break-word;
+}
+
+.sim-var-value.empty {
+    font-size: 0.82em;
+    color: #bbb;
+    font-style: italic;
+}
+
+.sim-var-full-wrap {
+    margin-top: 4px;
+}
+
+.sim-var-full {
+    margin: 6px 0 0;
+}
+
+/* Empty state */
+.sim-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #b0b0b0;
+    font-size: 1em;
+}
+
+@media (max-width: 768px) {
+    #macroResults {
+        padding: 12px;
+    }
+
+    .sim-prompt-header {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .sim-prompt-name {
+        font-size: 0.82em;
+    }
+
+    .sim-view-tab {
+        padding: 10px 4px;
+        font-size: 0.8em;
+    }
+
+    .macro-upload-section {
+        padding: 15px;
+    }
+}
