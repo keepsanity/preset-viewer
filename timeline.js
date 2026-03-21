@@ -21,6 +21,7 @@
     });
     fileInput.addEventListener('change', () => {
         if (fileInput.files.length) loadFiles(fileInput.files);
+        fileInput.value = '';
     });
 
     function loadFiles(files) {
