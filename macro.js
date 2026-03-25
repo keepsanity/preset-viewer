@@ -263,6 +263,8 @@
     let currentPrompts = null;
     let currentFileName = '';
 
+    let afterChatIdentifiers = new Set(); // chatHistory 뒤에 오는 프롬프트 identifier들
+
     function simulatePreset(data, fileName) {
         if (!data.prompts || !data.prompt_order) {
             simResults.innerHTML = '<div class="sim-empty">프리셋 형식이 올바르지 않습니다.</div>';
@@ -271,6 +273,19 @@
 
         currentPrompts = buildPromptListWithLinkStatus(data);
         currentFileName = fileName;
+
+        // prompt_order에서 chatHistory 뒤에 오는 identifier들 찾기
+        afterChatIdentifiers = new Set();
+        const targetOrder = data.prompt_order.find(po => po.character_id === 100001);
+        if (targetOrder?.order) {
+            const chatIdx = targetOrder.order.findIndex(o => o.identifier === 'chatHistory');
+            if (chatIdx >= 0) {
+                for (let i = chatIdx + 1; i < targetOrder.order.length; i++) {
+                    afterChatIdentifiers.add(targetOrder.order[i].identifier);
+                }
+            }
+        }
+
         runSimulation();
     }
 
@@ -379,8 +394,9 @@
         html += `<div class="sim-view${activeViewTab === 'final' ? ' active' : ''}" id="sim-view-final">`;
         html += '<div class="sim-guide">실제 API에 전송되는 순서입니다. Depth는 마지막 메시지 기준 위치를 뜻합니다. (0 = 마지막 메시지 바로 뒤, 1 = 바로 앞, 숫자가 클수록 대화 위쪽)</div>';
 
-        // 일반 프롬프트와 depth 프롬프트 분리
-        let normalParts = [];
+        // chatHistory 기준으로 앞/뒤 프롬프트 + depth 프롬프트 분리
+        let beforeChat = [];
+        let afterChat = [];
         let depthParts = [];
         prompts.forEach(p => {
             if (!p.enabled || !p.isLinked) return;
@@ -391,14 +407,17 @@
             if (!resolved) return;
             const name = p.name || p.identifier || '';
             const role = p.role || 'system';
+            const id = p.identifier || '';
             if (p.injection_position === 1) {
                 depthParts.push({ name, role, content: resolved, depth: p.injection_depth ?? 0, order: p.injection_order ?? 0 });
+            } else if (afterChatIdentifiers.has(id)) {
+                afterChat.push({ name, role, content: resolved });
             } else {
-                normalParts.push({ name, role, content: resolved });
+                beforeChat.push({ name, role, content: resolved });
             }
         });
 
-        // Depth: 높은 depth가 대화 앞쪽, 낮은 depth가 끝쪽. 같은 depth 내 order 오름차순.
+        // Depth 정렬: 높은 depth가 대화 앞쪽, 낮은 depth가 끝쪽
         depthParts.sort((a, b) => {
             if (a.depth !== b.depth) return b.depth - a.depth;
             return a.order - b.order;
@@ -410,51 +429,50 @@
             if (!depthGroups.has(p.depth)) depthGroups.set(p.depth, []);
             depthGroups.get(p.depth).push(p);
         });
-        const depthKeys = [...depthGroups.keys()].sort((a, b) => b - a); // 높은 depth 먼저
+        const depthKeys = [...depthGroups.keys()].sort((a, b) => b - a);
 
-        if (normalParts.length > 0 || depthParts.length > 0) {
-            // 시스템 프롬프트
-            normalParts.forEach(part => {
-                html += `<div class="sim-final-block">`;
-                html += `<div class="sim-final-header">`;
-                html += `<span class="sim-prompt-name">${escapeHtml(part.name)}</span>`;
-                html += `<span class="sim-prompt-role">${escapeHtml(part.role)}</span>`;
-                html += `</div>`;
-                html += `<pre class="sim-final-content">${escapeHtml(part.content)}</pre>`;
-                html += `</div>`;
-            });
+        const renderBlock = (part, isDepth) => {
+            let h = `<div class="sim-final-block${isDepth ? ' depth' : ''}">`;
+            h += `<div class="sim-final-header">`;
+            h += `<span class="sim-prompt-name">${escapeHtml(part.name)}</span>`;
+            if (isDepth) {
+                const dHint = part.depth === 0 ? '마지막 메시지 뒤' : part.depth === 1 ? '마지막 메시지 앞' : `마지막에서 ${part.depth}칸 위`;
+                h += `<span class="sim-final-depth" title="${dHint}">Depth ${part.depth} · Order ${part.order}</span>`;
+            }
+            h += `<span class="sim-prompt-role">${escapeHtml(part.role)}</span>`;
+            h += `</div>`;
+            h += `<pre class="sim-final-content">${escapeHtml(part.content)}</pre>`;
+            h += `</div>`;
+            return h;
+        };
 
-            // 대화 내용 마커 → depth 프롬프트 → 마지막 메시지 마커 (분리 없이 하나의 흐름)
-            if (depthParts.length > 0) {
-                html += '<div class="sim-chat-placeholder">💬 대화 내용</div>';
+        if (beforeChat.length > 0 || afterChat.length > 0 || depthParts.length > 0) {
+            // 대화 전 프롬프트
+            beforeChat.forEach(part => { html += renderBlock(part, false); });
 
-                depthKeys.forEach(depth => {
-                    if (depth === 0) {
-                        html += '<div class="sim-chat-placeholder last">💬 마지막 메시지</div>';
-                    }
-                    const depthDesc = depth === 0
-                        ? '마지막 메시지 바로 뒤'
-                        : depth === 1
-                            ? '마지막 메시지 바로 앞'
-                            : `마지막 메시지에서 ${depth}칸 위`;
-                    html += `<div class="sim-depth-marker">↕ Depth ${depth} — ${depthDesc}</div>`;
-                    depthGroups.get(depth).forEach(part => {
-                        html += `<div class="sim-final-block depth">`;
-                        html += `<div class="sim-final-header">`;
-                        html += `<span class="sim-prompt-name">${escapeHtml(part.name)}</span>`;
-                        const dHint = part.depth === 0 ? '마지막 메시지 뒤' : part.depth === 1 ? '마지막 메시지 앞' : `마지막에서 ${part.depth}칸 위`;
-                        html += `<span class="sim-final-depth" title="${dHint}">Depth ${part.depth} · Order ${part.order}</span>`;
-                        html += `<span class="sim-prompt-role">${escapeHtml(part.role)}</span>`;
-                        html += `</div>`;
-                        html += `<pre class="sim-final-content">${escapeHtml(part.content)}</pre>`;
-                        html += `</div>`;
-                    });
-                });
+            // 대화 영역 + depth 프롬프트
+            html += '<div class="sim-chat-placeholder">💬 대화 내용</div>';
 
-                if (!depthGroups.has(0)) {
+            // depth 높은 것부터 (대화 위쪽)
+            depthKeys.forEach(depth => {
+                if (depth === 0) {
                     html += '<div class="sim-chat-placeholder last">💬 마지막 메시지</div>';
                 }
+                const depthDesc = depth === 0
+                    ? '마지막 메시지 바로 뒤'
+                    : depth === 1
+                        ? '마지막 메시지 바로 앞'
+                        : `마지막 메시지에서 ${depth}칸 위`;
+                html += `<div class="sim-depth-marker">↕ Depth ${depth} — ${depthDesc}</div>`;
+                depthGroups.get(depth).forEach(part => { html += renderBlock(part, true); });
+            });
+
+            if (!depthGroups.has(0)) {
+                html += '<div class="sim-chat-placeholder last">💬 마지막 메시지</div>';
             }
+
+            // 대화 후 프롬프트
+            afterChat.forEach(part => { html += renderBlock(part, false); });
         } else {
             html += '<div class="sim-empty">출력되는 내용이 없습니다.</div>';
         }
