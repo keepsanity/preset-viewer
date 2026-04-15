@@ -327,11 +327,17 @@
 
         let html = '';
 
+        // 토큰 계산
+        let enabledTokens = 0;
+        enabledPrompts.forEach(p => { enabledTokens += countTokens(p.content); });
+        const tokenNote = _tokenizerReady ? '' : ' (추정)';
+
         // 요약
         html += '<div class="sim-summary">';
         html += `<div class="sim-summary-row"><span class="sim-summary-label">전체 프롬프트</span><span class="sim-summary-value">${prompts.length}개</span></div>`;
         html += `<div class="sim-summary-row"><span class="sim-summary-label">활성화 (실제 전송)</span><span class="sim-summary-value sim-active">${enabledPrompts.length}개</span></div>`;
         html += `<div class="sim-summary-row"><span class="sim-summary-label">비활성화</span><span class="sim-summary-value sim-inactive">${disabledPrompts.length}개</span></div>`;
+        html += `<div class="sim-summary-row"><span class="sim-summary-label">활성 토큰${tokenNote}</span><span class="sim-summary-value">${formatTokens(enabledTokens)}</span></div>`;
         if (vars.size > 0) html += `<div class="sim-summary-row"><span class="sim-summary-label">변수</span><span class="sim-summary-value">${vars.size}개</span></div>`;
         html += '</div>';
 
@@ -432,6 +438,7 @@
         const depthKeys = [...depthGroups.keys()].sort((a, b) => b - a);
 
         const renderBlock = (part, isDepth) => {
+            const tokens = countTokens(part.content);
             let h = `<div class="sim-final-block${isDepth ? ' depth' : ''}">`;
             h += `<div class="sim-final-header">`;
             h += `<span class="sim-prompt-name">${escapeHtml(part.name)}</span>`;
@@ -439,6 +446,7 @@
                 const dHint = part.depth === 0 ? '마지막 메시지 뒤' : part.depth === 1 ? '마지막 메시지 앞' : `마지막에서 ${part.depth}칸 위`;
                 h += `<span class="sim-final-depth" title="${dHint}">Depth ${part.depth} · Order ${part.order}</span>`;
             }
+            h += `<span class="sim-final-tokens">${formatTokens(tokens)} tk</span>`;
             h += `<span class="sim-prompt-role">${escapeHtml(part.role)}</span>`;
             h += `</div>`;
             h += `<pre class="sim-final-content">${escapeHtml(part.content)}</pre>`;

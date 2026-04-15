@@ -147,6 +147,35 @@ function buildPromptListWithLinkStatus(data) {
     return sortedPrompts;
 }
 
+// ─── 토큰 카운터 (글로벌) ───
+
+let _tokenizerReady = false;
+let _tokenizer = null;
+
+// gpt-tokenizer CDN 로드 확인
+try {
+    if (typeof GPTTokenizer_cl100k_base !== 'undefined') {
+        _tokenizer = GPTTokenizer_cl100k_base;
+        _tokenizerReady = true;
+    }
+} catch (e) { /* CDN 로드 실패 시 폴백 사용 */ }
+
+function countTokens(text) {
+    if (!text) return 0;
+    if (_tokenizerReady && _tokenizer) {
+        try {
+            return _tokenizer.encode(text).length;
+        } catch (e) { /* 폴백 */ }
+    }
+    // 폴백: SillyTavern 방식 (byteLength / 3.35)
+    const byteLength = new TextEncoder().encode(text).length;
+    return Math.ceil(byteLength / 3.35);
+}
+
+function formatTokens(n) {
+    return n.toLocaleString();
+}
+
 // 프롬프트 표시
 function displayPrompts(prompts) {
     promptList.innerHTML = '';
@@ -154,9 +183,13 @@ function displayPrompts(prompts) {
     let enabledCount = 0;
     let disabledCount = 0;
     let unlinkedCount = 0;
+    let totalTokens = 0;
+    let enabledTokens = 0;
 
     prompts.forEach((prompt, index) => {
-        if (prompt.enabled) enabledCount++;
+        const tokens = countTokens(prompt.content);
+        totalTokens += tokens;
+        if (prompt.enabled) { enabledCount++; enabledTokens += tokens; }
         else disabledCount++;
         if (prompt.isLinked === false) unlinkedCount++;
 
@@ -233,6 +266,14 @@ function displayPrompts(prompts) {
             headerMeta.appendChild(orderItem);
         }
 
+        // 토큰 수
+        if (prompt.content) {
+            const tokenItem = document.createElement('div');
+            tokenItem.className = 'prompt-header-meta-item';
+            tokenItem.innerHTML = `<span class="prompt-header-meta-label">토큰:</span> ${formatTokens(tokens)}`;
+            headerMeta.appendChild(tokenItem);
+        }
+
         // 연결 상태
         const linkItem = document.createElement('div');
         linkItem.className = 'prompt-header-meta-item';
@@ -272,6 +313,7 @@ function displayPrompts(prompts) {
     });
 
     // 통계 표시
+    const tokenNote = _tokenizerReady ? '' : ' (추정)';
     stats.innerHTML = `
         <div class="stat-item">
             <div class="stat-number">${prompts.length}</div>
@@ -284,6 +326,10 @@ function displayPrompts(prompts) {
         <div class="stat-item">
             <div class="stat-number">${disabledCount}</div>
             <div class="stat-label">비활성화됨</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">${formatTokens(enabledTokens)}</div>
+            <div class="stat-label">활성 토큰${tokenNote}</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">${unlinkedCount}</div>

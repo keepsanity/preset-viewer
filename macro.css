@@ -325,6 +325,16 @@
     flex-shrink: 0;
     font-family: 'Consolas', 'Monaco', monospace;
 }
+.sim-final-tokens {
+    font-size: 0.72em;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #f3e5f5;
+    color: #7b1fa2;
+    font-weight: 600;
+    flex-shrink: 0;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
 
 /* Chat placeholder (대화 내용 / 마지막 메시지 마커) */
 .sim-chat-placeholder {
