@@ -160,6 +160,64 @@ try {
     }
 } catch (e) { /* CDN 로드 실패 시 폴백 사용 */ }
 
+// 매크로 래퍼만 제거하고 실제 텍스트 내용은 보존 (토큰 카운트 정확도 향상)
+function stripInvisibleMacros(text) {
+    if (!text) return text;
+    let t = text;
+    // {{// 주석}} 제거
+    t = t.replace(/\{\{\/\/[^}]*\}\}/g, '');
+    // {{trim}} 제거
+    t = t.replace(/\{\{trim\}\}/gi, '');
+    // {{setvar::name::value}} → value만 남김
+    t = t.replace(/\{\{(?:set|add)(?:global)?var::[^:]+::([^}]*)\}\}/gi, '$1');
+    // {{incvar::name}}, {{decvar::name}} → 제거 (숫자 1~2 토큰 정도)
+    t = t.replace(/\{\{(?:inc|dec)(?:global)?var::[^}]+\}\}/gi, '');
+    // {{setvar name}}...{{/setvar}} → 내부 내용만 남김
+    t = t.replace(/\{\{setvar\s+[^}]+\}\}([\s\S]*?)\{\{\/setvar\}\}/gi, '$1');
+    // {{.name = value}} dot notation set → value만 남김 (nested brace 수동 파싱)
+    t = stripDotSetKeepValue(t);
+    return t;
+}
+
+function stripDotSetKeepValue(content) {
+    let result = '';
+    let i = 0;
+    while (i < content.length) {
+        if (content[i] === '{' && content[i+1] === '{') {
+            let j = i + 2;
+            while (j < content.length && content[j] === ' ') j++;
+            if (content[j] === '.') {
+                j++;
+                while (j < content.length && content[j] === ' ') j++;
+                let name = '';
+                while (j < content.length && /[a-zA-Z0-9_]/.test(content[j])) { name += content[j]; j++; }
+                if (name) {
+                    while (j < content.length && content[j] === ' ') j++;
+                    if (content[j] === '=') {
+                        // SET 구문 - value 추출해서 남김
+                        let depth = 2;
+                        let valStart = j + 1;
+                        j = valStart;
+                        while (j < content.length && depth > 0) {
+                            if (content[j] === '{') depth++;
+                            else if (content[j] === '}') depth--;
+                            j++;
+                        }
+                        // j는 닫는 }} 다음, 마지막 }} 2글자 빼고 value 추출
+                        const value = content.substring(valStart, j - 2);
+                        result += value;
+                        i = j;
+                        continue;
+                    }
+                }
+            }
+        }
+        result += content[i];
+        i++;
+    }
+    return result;
+}
+
 function countTokens(text) {
     if (!text) return 0;
     if (_tokenizerReady && _tokenizer) {
@@ -186,8 +244,16 @@ function displayPrompts(prompts) {
     let totalTokens = 0;
     let enabledTokens = 0;
 
+    // 변수 resolve된 content로 토큰 계산 (시뮬레이터와 동일)
+    const resolveResult = (typeof window.resolveActivePrompts === 'function')
+        ? window.resolveActivePrompts(prompts)
+        : null;
+
     prompts.forEach((prompt, index) => {
-        const tokens = countTokens(prompt.content);
+        const contentForToken = resolveResult
+            ? (resolveResult.resolvedMap.get(index) || '')
+            : (prompt.content || '');
+        const tokens = countTokens(contentForToken);
         totalTokens += tokens;
         if (prompt.enabled) { enabledCount++; enabledTokens += tokens; }
         else disabledCount++;

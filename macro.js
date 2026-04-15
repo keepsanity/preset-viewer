@@ -257,6 +257,37 @@
         return result;
     }
 
+    // ─── 공유 유틸: 활성 프롬프트의 변수 resolve 수행 후 각 프롬프트의 content 반환 ───
+    // 시뮬레이터와 프리셋 보기에서 동일한 토큰 계산을 위해 사용
+    window.resolveActivePrompts = function(prompts) {
+        const vars = new Map();
+        // 1단계: 활성 프롬프트의 set 연산 실행
+        prompts.forEach(p => {
+            if (!p.enabled) return;
+            processSetOperations(p.content || '', vars);
+        });
+        // 2단계: 변수 안의 참조 치환
+        let pass = 0;
+        while (pass < 5) {
+            let changed = false;
+            vars.forEach((val, key) => {
+                const r = resolveVariables(val, vars);
+                if (r !== val) { vars.set(key, r); changed = true; }
+            });
+            if (!changed) break;
+            pass++;
+        }
+        // 3단계: 각 프롬프트 content resolve
+        const resolvedMap = new Map();
+        prompts.forEach((p, idx) => {
+            let content = p.content || '';
+            content = stripSetMacros(content);
+            content = resolveVariables(content, vars);
+            resolvedMap.set(idx, content);
+        });
+        return { resolvedMap, vars };
+    };
+
     // ─── 시뮬레이션 실행 ───
 
     // 현재 시뮬레이션 상태 저장 (토글 시 재실행용)
@@ -327,9 +358,13 @@
 
         let html = '';
 
-        // 토큰 계산
+        // 토큰 계산 (변수 치환 후 resolved content 기준)
         let enabledTokens = 0;
-        enabledPrompts.forEach(p => { enabledTokens += countTokens(p.content); });
+        enabledPrompts.forEach(p => {
+            let resolved = stripSetMacros(p.content || '');
+            resolved = resolveVariables(resolved, vars);
+            enabledTokens += countTokens(resolved);
+        });
         const tokenNote = _tokenizerReady ? '' : ' (추정)';
 
         // 요약
