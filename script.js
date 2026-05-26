@@ -6,6 +6,7 @@ const errorMessage = document.getElementById('errorMessage');
 const stats = document.getElementById('stats');
 const copyButton = document.getElementById('copyButton');
 const presetName = document.getElementById('presetName');
+const presetSettings = document.getElementById('presetSettings');
 const searchSection = document.getElementById('searchSection');
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');
@@ -91,6 +92,7 @@ function processData(data) {
 
         currentData = sortedPrompts;
         displayPrompts(sortedPrompts);
+        displayPresetSettings(data);
 
         // 파일명 표시
         presetName.textContent = `📄 ${currentFileName}`;
@@ -232,6 +234,176 @@ function countTokens(text) {
 
 function formatTokens(n) {
     return n.toLocaleString();
+}
+
+// 프리셋 설정 표시 (temperature, top_p, reasoning_effort 등)
+const SOURCE_INFO = {
+    openai:       { label: 'OpenAI',          icon: '🟢' },
+    claude:       { label: 'Claude',          icon: '🟠' },
+    windowai:     { label: 'Window AI',       icon: '🪟' },
+    openrouter:   { label: 'OpenRouter',      icon: '🛜' },
+    ai21:         { label: 'AI21',            icon: '🔮' },
+    scale:        { label: 'Scale',           icon: '⚖️' },
+    makersuite:   { label: 'Google AI Studio',icon: '🔷' },
+    google:       { label: 'Google AI Studio',icon: '🔷' },
+    vertexai:     { label: 'Vertex AI',       icon: '🔷' },
+    mistralai:    { label: 'Mistral AI',      icon: '🌬️' },
+    custom:       { label: 'Custom (OAI호환)', icon: '🔧' },
+    cohere:       { label: 'Cohere',          icon: '🟣' },
+    perplexity:   { label: 'Perplexity',      icon: '🔍' },
+    groq:         { label: 'Groq',            icon: '⚡' },
+    '01ai':       { label: '01.AI',           icon: '🔢' },
+    nanogpt:      { label: 'NanoGPT',         icon: '🤖' },
+    deepseek:     { label: 'DeepSeek',        icon: '🐋' },
+    aimlapi:      { label: 'AI/ML API',       icon: '🧠' },
+    xai:          { label: 'xAI',             icon: '✖️' },
+    pollinations: { label: 'Pollinations',    icon: '🌸' },
+    moonshot:     { label: 'Moonshot',        icon: '🌙' },
+    electronhub:  { label: 'ElectronHub',     icon: '⚛️' },
+    chutes:       { label: 'Chutes',          icon: '🪂' },
+    siliconflow:  { label: 'SiliconFlow',     icon: '🌊' },
+    fireworks:    { label: 'Fireworks',       icon: '🎆' },
+    cometapi:     { label: 'CometAPI',        icon: '☄️' },
+    zai:          { label: 'Z.AI',            icon: '🅉' },
+};
+
+function formatNumber(v) {
+    if (typeof v !== 'number') return String(v);
+    if (Number.isInteger(v)) return v.toLocaleString();
+    return v.toString();
+}
+
+function pickModelForSource(data, source) {
+    const key = `${source}_model`;
+    if (data[key]) return data[key];
+    if (data.model) return data.model;
+    return null;
+}
+
+function displayPresetSettings(data) {
+    if (!presetSettings) return;
+
+    const source = data.chat_completion_source;
+    const srcInfo = source ? SOURCE_INFO[source] : null;
+    const model = source ? pickModelForSource(data, source) : (data.model || null);
+
+    const sections = [];
+
+    // ─── 연결 ───
+    const connItems = [];
+    if (source) {
+        connItems.push({
+            label: '연결 프로필',
+            value: srcInfo ? `${srcInfo.icon} ${srcInfo.label}` : source,
+            highlight: true,
+        });
+    }
+    if (model) connItems.push({ label: '모델', value: model, mono: true });
+    if (data.zai_endpoint) connItems.push({ label: 'Endpoint', value: data.zai_endpoint });
+    if (data.custom_url) connItems.push({ label: 'URL', value: data.custom_url, mono: true });
+    if (data.reverse_proxy) connItems.push({ label: 'Reverse Proxy', value: data.reverse_proxy, mono: true });
+    if (connItems.length) sections.push({ title: '🔌 연결', items: connItems });
+
+    // ─── 샘플러 ───
+    const samplerFields = [
+        ['temperature', 'Temperature'],
+        ['top_p', 'Top P'],
+        ['top_k', 'Top K'],
+        ['min_p', 'Min P'],
+        ['top_a', 'Top A'],
+        ['typical_p', 'Typical P'],
+        ['tfs', 'TFS'],
+        ['frequency_penalty', 'Frequency Penalty'],
+        ['presence_penalty', 'Presence Penalty'],
+        ['repetition_penalty', 'Repetition Penalty'],
+    ];
+    const samplerItems = samplerFields
+        .filter(([k]) => k in data && data[k] !== null && data[k] !== '')
+        .map(([k, label]) => ({ label, value: formatNumber(data[k]) }));
+    if (typeof data.seed === 'number' && data.seed !== -1) {
+        samplerItems.push({ label: 'Seed', value: formatNumber(data.seed) });
+    }
+    if (samplerItems.length) sections.push({ title: '🎲 샘플러', items: samplerItems });
+
+    // ─── 토큰/컨텍스트 ───
+    const tokenItems = [];
+    if (typeof data.openai_max_context === 'number') {
+        tokenItems.push({ label: 'Max Context', value: formatNumber(data.openai_max_context) });
+    }
+    if (typeof data.openai_max_tokens === 'number') {
+        tokenItems.push({ label: 'Max Response', value: formatNumber(data.openai_max_tokens) });
+    }
+    if (data.max_context_unlocked) {
+        tokenItems.push({ label: 'Context Unlocked', value: '✓' });
+    }
+    if (tokenItems.length) sections.push({ title: '📏 토큰', items: tokenItems });
+
+    // ─── 리즈닝 ───
+    const reasoningItems = [];
+    if (data.reasoning_effort) reasoningItems.push({ label: 'Reasoning Effort', value: data.reasoning_effort, highlight: true });
+    if (data.thinking_budget !== undefined && data.thinking_budget !== null && data.thinking_budget !== 0) {
+        reasoningItems.push({ label: 'Thinking Budget', value: formatNumber(data.thinking_budget) });
+    }
+    if (data.request_thoughts) reasoningItems.push({ label: '생각 요청', value: '✓' });
+    if (data.show_thoughts) reasoningItems.push({ label: '생각 표시', value: '✓' });
+    if (data.include_reasoning) reasoningItems.push({ label: 'Reasoning 포함', value: '✓' });
+    if (reasoningItems.length) sections.push({ title: '🧠 리즈닝', items: reasoningItems });
+
+    // ─── 기타 옵션 ───
+    const miscItems = [];
+    if (data.function_calling) miscItems.push({ label: 'Function Calling', value: '✓' });
+    if (data.stream_openai) miscItems.push({ label: 'Stream', value: '✓' });
+    if (data.claude_use_sysprompt) miscItems.push({ label: 'System Prompt', value: '✓' });
+    if (data.continue_prefill) miscItems.push({ label: 'Continue Prefill', value: '✓' });
+    if (data.bias_preset_selected && data.bias_preset_selected !== 'Default (none)') {
+        miscItems.push({ label: 'Logit Bias', value: data.bias_preset_selected });
+    }
+    if (miscItems.length) sections.push({ title: '⚙️ 기타', items: miscItems });
+
+    if (sections.length === 0) {
+        presetSettings.innerHTML = '';
+        presetSettings.style.display = 'none';
+        return;
+    }
+
+    const totalCount = sections.reduce((n, s) => n + s.items.length, 0);
+    const wasCollapsed = presetSettings.classList.contains('collapsed');
+
+    presetSettings.innerHTML = `
+        <button type="button" class="preset-settings-toggle" aria-expanded="${wasCollapsed ? 'false' : 'true'}">
+            <span class="preset-settings-toggle-label">⚙️ 프리셋 설정 <span class="preset-settings-count">${totalCount}</span></span>
+            <span class="preset-settings-toggle-icon">▼</span>
+        </button>
+        <div class="preset-settings-body">
+            ${sections.map(({ title, items }) => `
+                <div class="preset-settings-section">
+                    <div class="preset-settings-section-title">${title}</div>
+                    <div class="preset-settings-chips">
+                        ${items.map((it) => `
+                            <div class="preset-setting-item${it.highlight ? ' highlight' : ''}">
+                                <span class="preset-setting-label">${escapeSettingValue(it.label)}</span>
+                                <span class="preset-setting-value${it.mono ? ' mono' : ''}">${escapeSettingValue(it.value)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    presetSettings.style.display = 'block';
+
+    const toggleBtn = presetSettings.querySelector('.preset-settings-toggle');
+    toggleBtn.addEventListener('click', () => {
+        const collapsed = presetSettings.classList.toggle('collapsed');
+        toggleBtn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    });
+}
+
+function escapeSettingValue(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
 
 // 프롬프트 표시
