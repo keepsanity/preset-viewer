@@ -7,17 +7,17 @@
 }
 
 .dep-upload-area {
-    border: 3px dashed #ffb3d9;
+    border: 3px dashed var(--c-accent);
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #fff5fa;
+    background: var(--c-surface-tint);
 }
 
 .dep-upload-area:hover {
-    background: #ffe5f7;
-    border-color: #d63384;
+    background: var(--c-tint);
+    border-color: var(--c-primary);
 }
 
 #depResults {
@@ -26,7 +26,7 @@
 
 /* 요약 */
 .dep-summary {
-    background: #fff5fa;
+    background: var(--c-surface-tint);
     border-radius: 12px;
     padding: 16px 20px;
     margin-bottom: 16px;
@@ -37,7 +37,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px 0;
-    border-bottom: 1px solid rgba(214, 51, 132, 0.08);
+    border-bottom: 1px solid hsla(var(--c-primary-hsl), 0.08);
 }
 
 .dep-summary-row:last-child {
@@ -46,14 +46,14 @@
 
 .dep-summary-label {
     font-size: 0.88em;
-    color: #8a5070;
+    color: var(--c-primary-muted);
     font-weight: 500;
 }
 
 .dep-summary-value {
     font-size: 1em;
     font-weight: 700;
-    color: #d63384;
+    color: var(--c-primary);
 }
 
 .dep-summary-value.dep-connected {
@@ -75,7 +75,7 @@
     margin-bottom: 16px;
     border-radius: 10px;
     overflow: hidden;
-    border: 2px solid #ffe5f7;
+    border: 2px solid var(--c-tint);
 }
 
 .dep-view-tab {
@@ -83,7 +83,7 @@
     padding: 12px 8px;
     background: white;
     border: none;
-    color: #b05080;
+    color: var(--c-primary-soft);
     font-size: 0.88em;
     font-weight: 600;
     cursor: pointer;
@@ -91,15 +91,15 @@
 }
 
 .dep-view-tab:not(:last-child) {
-    border-right: 1px solid #ffe5f7;
+    border-right: 1px solid var(--c-tint);
 }
 
 .dep-view-tab:hover {
-    background: #fff5fa;
+    background: var(--c-surface-tint);
 }
 
 .dep-view-tab.active {
-    background: #d63384;
+    background: var(--c-primary);
     color: white;
 }
 
@@ -132,7 +132,7 @@
 /* ─── 변수별 보기 ─── */
 
 .dep-var-card {
-    border: 1px solid rgba(214, 51, 132, 0.1);
+    border: 1px solid hsla(var(--c-primary-hsl), 0.1);
     border-radius: 10px;
     margin-bottom: 12px;
     overflow: hidden;
@@ -142,13 +142,13 @@
 }
 
 .dep-var-card:hover {
-    border-color: rgba(214, 51, 132, 0.25);
-    box-shadow: 0 2px 8px rgba(214, 51, 132, 0.08);
+    border-color: hsla(var(--c-primary-hsl), 0.25);
+    box-shadow: 0 2px 8px hsla(var(--c-primary-hsl), 0.08);
 }
 
 .dep-var-card.dep-hl {
-    border-color: rgba(214, 51, 132, 0.5);
-    box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.12);
+    border-color: hsla(var(--c-primary-hsl), 0.5);
+    box-shadow: 0 0 0 3px hsla(var(--c-primary-hsl), 0.12);
 }
 
 .dep-var-header {
@@ -156,8 +156,8 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    background: rgba(214, 51, 132, 0.03);
-    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+    background: hsla(var(--c-primary-hsl), 0.03);
+    border-bottom: 1px solid hsla(var(--c-primary-hsl), 0.06);
 }
 
 .dep-var-dot {
@@ -280,7 +280,7 @@
 /* ─── 프롬프트별 보기 ─── */
 
 .dep-prompt-card {
-    border: 1px solid rgba(214, 51, 132, 0.1);
+    border: 1px solid hsla(var(--c-primary-hsl), 0.1);
     border-radius: 10px;
     margin-bottom: 10px;
     overflow: hidden;
@@ -297,12 +297,12 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    background: rgba(214, 51, 132, 0.03);
-    border-bottom: 1px solid rgba(214, 51, 132, 0.06);
+    background: hsla(var(--c-primary-hsl), 0.03);
+    border-bottom: 1px solid hsla(var(--c-primary-hsl), 0.06);
 }
 
 .dep-prompt-num {
-    background: #d63384;
+    background: var(--c-primary);
     color: white;
     width: 22px;
     height: 22px;
@@ -334,8 +334,8 @@
     font-size: 0.72em;
     padding: 2px 8px;
     border-radius: 8px;
-    background: rgba(214, 51, 132, 0.08);
-    color: #b05080;
+    background: hsla(var(--c-primary-hsl), 0.08);
+    color: var(--c-primary-soft);
     font-weight: 600;
     flex-shrink: 0;
     text-transform: uppercase;

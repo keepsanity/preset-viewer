@@ -10,19 +10,19 @@
 
     simUploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        simUploadArea.style.borderColor = '#d63384';
-        simUploadArea.style.background = '#ffe5f7';
+        simUploadArea.style.borderColor = 'var(--c-primary)';
+        simUploadArea.style.background = 'var(--c-tint)';
     });
 
     simUploadArea.addEventListener('dragleave', () => {
-        simUploadArea.style.borderColor = '#ffb3d9';
-        simUploadArea.style.background = '#fff5fa';
+        simUploadArea.style.borderColor = 'var(--c-accent)';
+        simUploadArea.style.background = 'var(--c-surface-tint)';
     });
 
     simUploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        simUploadArea.style.borderColor = '#ffb3d9';
-        simUploadArea.style.background = '#fff5fa';
+        simUploadArea.style.borderColor = 'var(--c-accent)';
+        simUploadArea.style.background = 'var(--c-surface-tint)';
         if (e.dataTransfer.files.length > 0) loadSimFile(e.dataTransfer.files[0]);
     });
 

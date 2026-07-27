@@ -1,0 +1,168 @@
+/* ============================================
+   Color Theme System
+   모든 색은 --pv-h(색상) / --pv-s(채도) 두 값에서 파생됩니다.
+   테마 목록은 theme.js 의 THEMES 배열에 있어요.
+   ============================================ */
+
+:root {
+    /* 기본값: 핑크 (theme.js 가 저장된 테마로 덮어씁니다) */
+    --pv-h: 330;
+    --pv-s: 1;
+
+    /* hsla() 로 알파를 붙일 수 있게 삼중값으로도 보관 */
+    --c-primary-hsl: var(--pv-h), calc(66% * var(--pv-s)), 52%;
+    --c-accent-hsl: var(--pv-h), calc(100% * var(--pv-s)), 85%;
+    --c-accent-light-hsl: var(--pv-h), calc(100% * var(--pv-s)), 93%;
+    --c-hot-hsl: var(--pv-h), calc(100% * var(--pv-s)), 71%;
+
+    /* 강조 텍스트 계열 */
+    --c-primary: hsl(var(--c-primary-hsl));                          /* was #d63384 */
+    --c-primary-deep: hsl(var(--pv-h), calc(44% * var(--pv-s)), 50%); /* was #b8478a */
+    --c-primary-soft: hsl(var(--pv-h), calc(37% * var(--pv-s)), 51%); /* was #b05080 / #b05a8a */
+    --c-primary-muted: hsl(var(--pv-h), calc(27% * var(--pv-s)), 43%); /* was #8a5070 */
+    --c-primary-faint: hsl(var(--pv-h), calc(40% * var(--pv-s)), 64%); /* was #c77da0 */
+    --c-primary-pale: hsl(var(--pv-h), calc(40% * var(--pv-s)), 73%);  /* was #d6a0c0 */
+    --c-primary-dim: hsl(var(--pv-h), calc(23% * var(--pv-s)), 60%);   /* was #b08090 */
+    --c-ink: hsl(var(--pv-h), calc(21% * var(--pv-s)), 24%);           /* was #4a3040 */
+
+    /* 배경 / 테두리 계열 */
+    --c-hot: hsl(var(--c-hot-hsl));                                    /* was #ff69b4 */
+    --c-accent-strong: hsl(var(--pv-h), calc(100% * var(--pv-s)), 78%);/* was #ff8ec5 */
+    --c-accent: hsl(var(--c-accent-hsl));                              /* was #ffb3d9 */
+    --c-accent-mid: hsl(var(--pv-h), calc(100% * var(--pv-s)), 89%);   /* was #ffc9e5 */
+    --c-accent-light: hsl(var(--c-accent-light-hsl));                  /* was #ffd9f2 */
+    --c-tint: hsl(var(--pv-h), calc(100% * var(--pv-s)), 95%);         /* was #ffe5f7 */
+    --c-tint-strong: hsl(var(--pv-h), calc(100% * var(--pv-s)), 97%);  /* was #fff0f8 */
+    --c-surface-tint: hsl(var(--pv-h), calc(100% * var(--pv-s)), 98%); /* was #fff5fa */
+    --c-surface-tint-2: hsl(var(--pv-h), calc(100% * var(--pv-s)), 99%); /* was #fffafd */
+    --c-border: hsl(var(--pv-h), calc(47% * var(--pv-s)), 89%);        /* was #f0d6e6 */
+}
+
+/* ============================================
+   테마 선택 버튼 (헤더 우측 상단)
+   ============================================ */
+.header {
+    position: relative;
+}
+
+.theme-switcher {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 50;
+}
+
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--c-primary);
+    font-size: 1.05em;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: rotate(-15deg) scale(1.06);
+}
+
+.theme-panel {
+    display: none;
+    position: absolute;
+    top: 46px;
+    right: 0;
+    width: 216px;
+    padding: 12px;
+    background: white;
+    border: 1px solid var(--c-border);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px hsla(var(--c-primary-hsl), 0.18);
+    text-align: left;
+}
+
+.theme-panel.open {
+    display: block;
+}
+
+.theme-panel-title {
+    font-size: 0.72em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--c-primary-muted);
+    margin-bottom: 10px;
+}
+
+.theme-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.theme-option:hover {
+    background: var(--c-surface-tint);
+}
+
+.theme-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06) inset;
+    transition: box-shadow 0.15s ease;
+}
+
+.theme-option.active .theme-swatch {
+    box-shadow: 0 0 0 2px white inset, 0 0 0 4px var(--c-primary);
+}
+
+.theme-option-label {
+    font-size: 0.66em;
+    font-weight: 600;
+    color: var(--c-primary-muted);
+    white-space: nowrap;
+}
+
+.theme-option.active .theme-option-label {
+    color: var(--c-primary);
+}
+
+@media (max-width: 768px) {
+    .theme-switcher {
+        top: 10px;
+        right: 10px;
+    }
+
+    .theme-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.95em;
+    }
+
+    .theme-panel {
+        top: 40px;
+        width: 200px;
+    }
+}

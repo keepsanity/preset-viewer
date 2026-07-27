@@ -8,23 +8,23 @@
 
 .tl-guide-top {
     font-size: 0.88em;
-    color: #8a5070;
+    color: var(--c-primary-muted);
     margin-bottom: 14px;
     font-weight: 500;
 }
 
 .tl-upload-area {
-    border: 3px dashed #ffb3d9;
+    border: 3px dashed var(--c-accent);
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #fff5fa;
+    background: var(--c-surface-tint);
 }
 
 .tl-upload-area:hover {
-    background: #ffe5f7;
-    border-color: #d63384;
+    background: var(--c-tint);
+    border-color: var(--c-primary);
 }
 
 /* 파일 목록 */
@@ -39,13 +39,13 @@
     gap: 10px;
     padding: 8px 12px;
     background: white;
-    border: 1px solid rgba(214, 51, 132, 0.1);
+    border: 1px solid hsla(var(--c-primary-hsl), 0.1);
     border-radius: 8px;
     margin-bottom: 6px;
 }
 
 .tl-file-num {
-    background: #d63384;
+    background: var(--c-primary);
     color: white;
     width: 22px;
     height: 22px;
@@ -104,8 +104,8 @@
 
 /* 전체 흐름 요약 */
 .tl-flow-summary {
-    background: #fff9fc;
-    border: 1px solid rgba(214, 51, 132, 0.12);
+    background: var(--c-surface-tint-2);
+    border: 1px solid hsla(var(--c-primary-hsl), 0.12);
     border-radius: 12px;
     padding: 16px 20px;
     margin-bottom: 16px;
@@ -130,8 +130,8 @@
 
 .tl-flow-node {
     background: white;
-    border: 2px solid #d63384;
-    color: #d63384;
+    border: 2px solid var(--c-primary);
+    color: var(--c-primary);
     font-weight: 700;
     font-size: 0.82em;
     padding: 6px 14px;
@@ -172,13 +172,13 @@
 }
 
 .tl-tab:hover {
-    color: #d63384;
-    background: #fff5fa;
+    color: var(--c-primary);
+    background: var(--c-surface-tint);
 }
 
 .tl-tab.active {
-    color: #d63384;
-    border-bottom-color: #d63384;
+    color: var(--c-primary);
+    border-bottom-color: var(--c-primary);
 }
 
 /* 패널 */
@@ -309,8 +309,8 @@
     font-size: 0.72em;
     padding: 2px 8px;
     border-radius: 8px;
-    background: rgba(214, 51, 132, 0.08);
-    color: #b05080;
+    background: hsla(var(--c-primary-hsl), 0.08);
+    color: var(--c-primary-soft);
     font-weight: 600;
     flex-shrink: 0;
     text-transform: uppercase;
@@ -329,9 +329,9 @@
 }
 
 .tl-item-toggle:hover {
-    background: #fff5fa;
-    border-color: #d63384;
-    color: #d63384;
+    background: var(--c-surface-tint);
+    border-color: var(--c-primary);
+    color: var(--c-primary);
 }
 
 .tl-item-preview {

@@ -7,11 +7,11 @@
     // ─── 업로드 ───
 
     uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = '#d63384'; });
-    uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = '#ffb3d9'; });
+    uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--c-primary)'; });
+    uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'var(--c-accent)'; });
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
-        uploadArea.style.borderColor = '#ffb3d9';
+        uploadArea.style.borderColor = 'var(--c-accent)';
         if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
     });
     fileInput.addEventListener('change', () => {
